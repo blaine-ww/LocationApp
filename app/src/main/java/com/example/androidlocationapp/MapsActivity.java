@@ -12,6 +12,9 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -29,7 +32,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private static final int FINE_LOCATION_REQUEST_CODE=1000;
 
-    private FusedLocationProviderClient locationClient;
+    private FusedLocationProviderClient mLocationClient;
+
+    private LocationRequest mLocationRequest;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +91,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
             giveMePermissionToAccessLocation();
         } else {
-            locationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+
+            mMap.clear();
+
+            if (mLocationRequest == null){
+                mLocationRequest = LocationRequest.create();
+                if (mLocationRequest != null){
+                    mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                    mLocationRequest.setInterval(5000);
+                    mLocationRequest.setFastestInterval(1000);
+
+                    LocationCallback locationCallback = new LocationCallback() {
+                        @Override
+                        public void onLocationResult(@NonNull LocationResult locationResult) {
+                            //super.onLocationResult(locationResult);
+                            showMeTheUserCurrentLocation();
+
+
+                        }
+                    };
+
+                    mLocationClient.requestLocationUpdates(mLocationRequest, locationCallback, null);
+                }
+            }
+
+            mLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
                 @Override
                 public void onComplete(@NonNull Task<Location> task) {
                     Location location = task.getResult();
@@ -105,6 +135,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void prepareLocationServices(){
-        locationClient = LocationServices.getFusedLocationProviderClient(this);
+        mLocationClient = LocationServices.getFusedLocationProviderClient(this);
     }
 }
