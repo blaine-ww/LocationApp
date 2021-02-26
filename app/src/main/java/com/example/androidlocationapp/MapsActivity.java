@@ -34,7 +34,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private FusedLocationProviderClient mLocationClient;
 
-    private LocationRequest mLocationRequest;
+    //private LocationRequest mLocationRequest;
 
 
     @Override
@@ -92,7 +92,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             giveMePermissionToAccessLocation();
         } else {
 
-            mMap.clear();
+            /*mMap.clear();
 
             if (mLocationRequest == null){
                 mLocationRequest = LocationRequest.create();
@@ -113,15 +113,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     mLocationClient.requestLocationUpdates(mLocationRequest, locationCallback, null);
                 }
-            }
-
+            }*/
+            mMap.setMyLocationEnabled(true);
             mLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
                 @Override
                 public void onComplete(@NonNull Task<Location> task) {
                     Location location = task.getResult();
                     if (location != null){
                         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                        mMap.addMarker(new MarkerOptions().position(latLng).title("Your current location is here"));
+                        //mMap.addMarker(new MarkerOptions().position(latLng).title("Your current location is here"));
                         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 16f);
                         mMap.moveCamera(cameraUpdate);
 
