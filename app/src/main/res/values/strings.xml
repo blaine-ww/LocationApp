@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">Android Location App</string>
-    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_maps">Locate User</string>
 </resources>
